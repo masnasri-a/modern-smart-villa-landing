@@ -1,0 +1,8 @@
+/*
+	This CSS style is for Promo/Discount promo
+*/
+
+div.discount_box { background-color: #FF9600; line-height: 20px; width: 100%; padding: 15px 25px; margin: 0 0 15px; color: #000; text-align:left; }
+div.discount_box h3{ color:#000!important; margin-top: 10px!important; }
+div.discount_box li{ color:#000!important; }
+div.discount_box p{ color:#000!important; }

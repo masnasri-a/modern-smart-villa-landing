@@ -1,0 +1,16 @@
+.wrapsubmit{ position:relative; }
+.formbutton{ background-color: #4CAF50!important; border: none; color: white; padding: 15px 32px!important; text-align: center;  text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; width: 160px; float:left; margin-right: 10px; }
+.requiredfield{ color:red!important; font-size:12px; }
+.recaptchanotverified{ color:red!important; font-size:12px; }
+.recaptchaokay{ color:green!important; font-size:12px; }
+.response{ padding: 15px 0;}
+.imgloader img{ position:absolute; top: 10px; }
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 667px) { 
+
+.formbutton{ background-color: #4CAF50!important; border: none; color: white; padding: 10px 26px!important; text-align: center;  text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; width: 140px; margin-right: 5px; float:left; }
+.imgloader img{ position:absolute; float:left; top: 10px; }
+
+}
