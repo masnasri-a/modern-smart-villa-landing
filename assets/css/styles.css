@@ -371,18 +371,18 @@ p {
     margin-bottom: 3rem;
 }
 
-.contact-item {
+.contact-items {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.5rem;
+    padding: 8px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--border-radius);
     transition: var(--transition);
 }
 
-.contact-item:hover {
+.contact-items:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
 }

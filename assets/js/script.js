@@ -77,7 +77,7 @@ class VillaWaha {
 
         // Observe elements that should animate
         const animateElements = document.querySelectorAll(
-            '.section-title, .about-description, .feature-item, .gallery-item, .contact-item'
+            '.section-title, .about-description, .feature-item, .gallery-item, .contact-items'
         );
         
         animateElements.forEach(el => {
@@ -308,7 +308,7 @@ class VillaWaha {
         const contactSection = document.querySelector('.contact-section');
         
         // Add click handlers for contact items
-        const contactItems = document.querySelectorAll('.contact-item');
+        const contactItems = document.querySelectorAll('.contact-items');
         contactItems.forEach(item => {
             const details = item.querySelector('.contact-details p');
             if (details) {
