@@ -27,7 +27,7 @@ class VillaWaha {
         this.setupPerformanceOptimizations();
         this.setupCalendar();
         this.setupExclusiveSlider();
-        this.setupVideoSection();
+        this.setupPhotoGallery();
     }
 
     /**
@@ -763,112 +763,269 @@ class VillaWaha {
     /**
      * Setup Video Section functionality
      */
-    setupVideoSection() {
-        const playButton = document.getElementById('playVideoBtn');
+    /**
+     * Setup Photo Gallery functionality
+     */
+    setupPhotoGallery() {
+        const galleryImages = document.querySelectorAll('.main-gallery-image');
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        const prevBtn = document.getElementById('galleryPrev');
+        const nextBtn = document.getElementById('galleryNext');
+        const autoplayBtn = document.getElementById('autoplayBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const currentImageSpan = document.querySelector('.current-image');
+        const totalImagesSpan = document.querySelector('.total-images');
         
-        if (playButton) {
-            playButton.addEventListener('click', () => this.handleVideoPlay());
+        if (!galleryImages.length) return;
+        
+        let currentIndex = 0;
+        let isAutoplay = false;
+        let autoplayInterval = null;
+        
+        // Initialize gallery
+        this.updateGalleryDisplay(currentIndex, galleryImages, thumbnails, currentImageSpan);
+        
+        // Setup navigation buttons
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                currentIndex = currentIndex === 0 ? galleryImages.length - 1 : currentIndex - 1;
+                this.updateGalleryDisplay(currentIndex, galleryImages, thumbnails, currentImageSpan);
+            });
         }
         
-        // Add parallax effect to video background
-        this.setupVideoParallax();
-    }
-
-    /**
-     * Handle video play functionality
-     */
-    handleVideoPlay() {
-        // For now, this will show an alert
-        // In a real implementation, you would open a modal with the actual video
-        const modal = this.createVideoModal();
-        document.body.appendChild(modal);
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                currentIndex = currentIndex === galleryImages.length - 1 ? 0 : currentIndex + 1;
+                this.updateGalleryDisplay(currentIndex, galleryImages, thumbnails, currentImageSpan);
+            });
+        }
         
-        // Show modal with animation
-        setTimeout(() => {
-            modal.classList.add('show');
-        }, 10);
+        // Setup thumbnail clicks
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentIndex = index;
+                this.updateGalleryDisplay(currentIndex, galleryImages, thumbnails, currentImageSpan);
+            });
+        });
+        
+        // Setup autoplay functionality
+        if (autoplayBtn) {
+            autoplayBtn.addEventListener('click', () => {
+                isAutoplay = !isAutoplay;
+                
+                if (isAutoplay) {
+                    this.startAutoplay();
+                    autoplayBtn.querySelector('.play-icon').classList.add('hidden');
+                    autoplayBtn.querySelector('.pause-icon').classList.remove('hidden');
+                    autoplayBtn.querySelector('.control-text').textContent = 'Pause';
+                } else {
+                    this.stopAutoplay();
+                    autoplayBtn.querySelector('.play-icon').classList.remove('hidden');
+                    autoplayBtn.querySelector('.pause-icon').classList.add('hidden');
+                    autoplayBtn.querySelector('.control-text').textContent = 'Autoplay';
+                }
+            });
+        }
+        
+        // Setup fullscreen functionality
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                this.toggleFullscreen(galleryImages[currentIndex]);
+            });
+        }
+        
+        // Setup keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const gallerySection = document.querySelector('.experience-gallery-section');
+            if (!this.isElementInViewport(gallerySection)) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    prevBtn?.click();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextBtn?.click();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    autoplayBtn?.click();
+                    break;
+                case 'f':
+                case 'F':
+                    e.preventDefault();
+                    fullscreenBtn?.click();
+                    break;
+            }
+        });
+        
+        // Auto-advance functionality
+        const startAutoplay = () => {
+            autoplayInterval = setInterval(() => {
+                currentIndex = currentIndex === galleryImages.length - 1 ? 0 : currentIndex + 1;
+                this.updateGalleryDisplay(currentIndex, galleryImages, thumbnails, currentImageSpan);
+            }, 4000);
+        };
+        
+        const stopAutoplay = () => {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        };
+        
+        this.startAutoplay = startAutoplay;
+        this.stopAutoplay = stopAutoplay;
+        
+        // Pause autoplay on hover
+        const galleryContainer = document.querySelector('.photo-gallery-container');
+        if (galleryContainer) {
+            galleryContainer.addEventListener('mouseenter', () => {
+                if (isAutoplay) stopAutoplay();
+            });
+            
+            galleryContainer.addEventListener('mouseleave', () => {
+                if (isAutoplay) startAutoplay();
+            });
+        }
     }
-
+    
     /**
-     * Create video modal
+     * Update gallery display
      */
-    createVideoModal() {
-        const modal = document.createElement('div');
-        modal.className = 'video-modal';
-        modal.innerHTML = `
-            <div class="video-modal-content">
-                <button class="video-modal-close" aria-label="Close video">
+    updateGalleryDisplay(index, images, thumbnails, currentImageSpan) {
+        // Update main images
+        images.forEach((img, i) => {
+            img.classList.toggle('active', i === index);
+        });
+        
+        // Update thumbnails
+        thumbnails.forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+        
+        // Update counter
+        if (currentImageSpan) {
+            currentImageSpan.textContent = index + 1;
+        }
+        
+        // Scroll thumbnail into view
+        if (thumbnails[index]) {
+            thumbnails[index].scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }
+    
+    /**
+     * Toggle fullscreen for image
+     */
+    toggleFullscreen(image) {
+        if (!document.fullscreenElement) {
+            // Create fullscreen container
+            const fullscreenContainer = document.createElement('div');
+            fullscreenContainer.className = 'fullscreen-image-container';
+            fullscreenContainer.innerHTML = `
+                <img src="${image.src}" alt="${image.alt}" class="fullscreen-image">
+                <button class="fullscreen-close" aria-label="Exit fullscreen">
                     <svg viewBox="0 0 24 24" width="24" height="24">
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                     </svg>
                 </button>
-                <div class="video-placeholder-content">
-                    <div class="video-placeholder-icon">
-                        <svg viewBox="0 0 24 24" width="64" height="64">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
-                    </div>
-                    <h3>Villa Tour Video</h3>
-                    <p>Experience the beauty and luxury of our villa through this immersive video tour.</p>
-                    <p><em>Video content would be embedded here in the actual implementation.</em></p>
-                </div>
-            </div>
-        `;
-        
-        // Add event listener for close button
-        const closeButton = modal.querySelector('.video-modal-close');
-        closeButton.addEventListener('click', () => this.closeVideoModal(modal));
-        
-        // Close on backdrop click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                this.closeVideoModal(modal);
-            }
-        });
-        
-        // Close on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('show')) {
-                this.closeVideoModal(modal);
-            }
-        });
-        
-        return modal;
-    }
-
-    /**
-     * Close video modal
-     */
-    closeVideoModal(modal) {
-        modal.classList.remove('show');
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.parentNode.removeChild(modal);
-            }
-        }, 300);
-    }
-
-    /**
-     * Setup parallax effect for video background
-     */
-    setupVideoParallax() {
-        const videoSection = document.querySelector('.experience-motion-section');
-        const videoBackground = document.querySelector('.video-placeholder');
-        
-        if (!videoSection || !videoBackground) return;
-        
-        const handleScroll = this.throttle(() => {
-            const rect = videoSection.getBoundingClientRect();
-            const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+            `;
             
-            if (isInView) {
-                const scrolled = window.pageYOffset;
-                const rate = scrolled * -0.5;
-                videoBackground.style.transform = `translateY(${rate}px)`;
-            }
-        }, 10);
-        
-        window.addEventListener('scroll', handleScroll);
+            document.body.appendChild(fullscreenContainer);
+            
+            // Add fullscreen styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .fullscreen-image-container {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0, 0, 0, 0.95);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    animation: fadeIn 0.3s ease;
+                }
+                .fullscreen-image {
+                    max-width: 95vw;
+                    max-height: 95vh;
+                    object-fit: contain;
+                    border-radius: 8px;
+                }
+                .fullscreen-close {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    background: rgba(255, 255, 255, 0.9);
+                    border: none;
+                    border-radius: 50%;
+                    width: 50px;
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                .fullscreen-close:hover {
+                    background: white;
+                    transform: scale(1.1);
+                }
+                .fullscreen-close svg {
+                    fill: #333;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Close functionality
+            const closeBtn = fullscreenContainer.querySelector('.fullscreen-close');
+            const closeFullscreen = () => {
+                fullscreenContainer.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(fullscreenContainer);
+                    document.head.removeChild(style);
+                }, 300);
+            };
+            
+            closeBtn.addEventListener('click', closeFullscreen);
+            fullscreenContainer.addEventListener('click', (e) => {
+                if (e.target === fullscreenContainer) closeFullscreen();
+            });
+            
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    closeFullscreen();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            });
+        }
+    }
+    
+    /**
+     * Check if element is in viewport
+     */
+    isElementInViewport(el) {
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
 
     /**
