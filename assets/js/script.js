@@ -18,8 +18,8 @@ class VillaWaha {
     }
 
     initializeComponents() {
-        this.setupSmoothScrolling();
-        this.setupAnimations();
+        // this.setupSmoothScrolling();
+        // this.setupAnimations();
         this.setupImageLazyLoading();
         this.setupContactForm();
         this.setupGallery();
@@ -30,40 +30,64 @@ class VillaWaha {
         this.setupPhotoGallery();
     }
 
-    
+    /**
+     * Setup smooth scrolling for navigation links
+     */
+    // setupSmoothScrolling() {
+    //     const links = document.querySelectorAll('a[href^="#"]');
+        
+    //     links.forEach(link => {
+    //         link.addEventListener('click', (e) => {
+    //             e.preventDefault();
+    //             const targetId = link.getAttribute('href');
+    //             const targetElement = document.querySelector(targetId);
+                
+    //             if (targetElement) {
+    //                 const headerOffset = 80; // Account for fixed header if any
+    //                 const elementPosition = targetElement.getBoundingClientRect().top;
+    //                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    //                 window.scrollTo({
+    //                     top: offsetPosition,
+    //                     behavior: 'smooth'
+    //                 });
+    //             }
+    //         });
+    //     });
+    // }
 
     /**
      * Setup scroll-triggered animations
      */
-    setupAnimations() {
-        // Create intersection observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    // setupAnimations() {
+    //     // Create intersection observer for animations
+    //     const observerOptions = {
+    //         threshold: 0.1,
+    //         rootMargin: '0px 0px -50px 0px'
+    //     };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
+    //     const observer = new IntersectionObserver((entries) => {
+    //         entries.forEach(entry => {
+    //             if (entry.isIntersecting) {
+    //                 entry.target.classList.add('animate-in');
+    //                 observer.unobserve(entry.target);
+    //             }
+    //         });
+    //     }, observerOptions);
 
-        // Observe elements that should animate
-        const animateElements = document.querySelectorAll(
-            '.section-title, .about-description, .feature-item, .gallery-item, .contact-items'
-        );
+    //     // Observe elements that should animate
+    //     const animateElements = document.querySelectorAll(
+    //         '.section-title, .about-description, .feature-item, .gallery-item, .contact-items'
+    //     );
         
-        animateElements.forEach(el => {
-            el.classList.add('animate-element');
-            observer.observe(el);
-        });
+    //     animateElements.forEach(el => {
+    //         el.classList.add('animate-element');
+    //         observer.observe(el);
+    //     });
 
-        // Add CSS for animations
-        this.addAnimationStyles();
-    }
+    //     // Add CSS for animations
+    //     this.addAnimationStyles();
+    // }
 
     /**
      * Add animation styles dynamically
@@ -309,17 +333,17 @@ class VillaWaha {
      */
     setupAccessibility() {
         // Skip link functionality
-        const skipLink = document.querySelector('.skip-link');
-        if (skipLink) {
-            skipLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(skipLink.getAttribute('href'));
-                if (target) {
-                    target.focus();
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        }
+        // const skipLink = document.querySelector('.skip-link');
+        // if (skipLink) {
+        //     skipLink.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         const target = document.querySelector(skipLink.getAttribute('href'));
+        //         if (target) {
+        //             target.focus();
+        //             target.scrollIntoView({ behavior: 'smooth' });
+        //         }
+        //     });
+        // }
 
         // Add focus indicators for better keyboard navigation
         const focusableElements = document.querySelectorAll(
@@ -344,19 +368,19 @@ class VillaWaha {
      */
     setupPerformanceOptimizations() {
         // Throttle scroll events
-        let ticking = false;
+        // let ticking = false;
         
-        const handleScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    // Add scroll-based functionality here if needed
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
+        // const handleScroll = () => {
+        //     if (!ticking) {
+        //         requestAnimationFrame(() => {
+        //             // Add scroll-based functionality here if needed
+        //             ticking = false;
+        //         });
+        //         ticking = true;
+        //     }
+        // };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        // window.addEventListener('scroll', handleScroll, { passive: true });
 
         // Preload critical images
         this.preloadCriticalImages();
@@ -863,13 +887,13 @@ class VillaWaha {
         }
         
         // Scroll thumbnail into view
-        if (thumbnails[index]) {
-            thumbnails[index].scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center'
-            });
-        }
+        // if (thumbnails[index]) {
+        //     thumbnails[index].scrollIntoView({
+        //         behavior: 'smooth',
+        //         block: 'nearest',
+        //         inline: 'center'
+        //     });
+        // }
     }
     
     /**
