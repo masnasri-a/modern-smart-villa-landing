@@ -551,7 +551,19 @@
 
     <!-- JavaScript -->
     <script src="assets/js/script.js"></script>
-    <script src="https://emdedding-chatbot.laice.tech/embeddings.js"  apiKey="digital-pro-assist"></script>
+    <script>
+        const timestamp = new Date().getTime();
+    </script>
+    <script src="https://emdedding-chatbot.laice.tech/embeddings.js?t=" apiKey="digital-pro-assist"></script>
+    <script>
+        // Update the chatbot script src with current timestamp
+        const chatbotScript = document.querySelector('script[src*="embeddings.js"]');
+        if (chatbotScript) {
+            const currentSrc = chatbotScript.src;
+            const timestamp = new Date().getTime();
+            chatbotScript.src = currentSrc + timestamp;
+        }
+    </script>
 </body>
 
 </html>
