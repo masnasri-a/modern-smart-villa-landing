@@ -30,31 +30,7 @@ class VillaWaha {
         this.setupPhotoGallery();
     }
 
-    /**
-     * Setup smooth scrolling for navigation links
-     */
-    setupSmoothScrolling() {
-        const links = document.querySelectorAll('a[href^="#"]');
-        
-        links.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    const headerOffset = 80; // Account for fixed header if any
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    }
+    
 
     /**
      * Setup scroll-triggered animations
@@ -834,31 +810,7 @@ class VillaWaha {
             });
         }
         
-        // Setup keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            const gallerySection = document.querySelector('.experience-gallery-section');
-            if (!this.isElementInViewport(gallerySection)) return;
-            
-            switch(e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    prevBtn?.click();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    nextBtn?.click();
-                    break;
-                case ' ':
-                    e.preventDefault();
-                    autoplayBtn?.click();
-                    break;
-                case 'f':
-                case 'F':
-                    e.preventDefault();
-                    fullscreenBtn?.click();
-                    break;
-            }
-        });
+        
         
         // Auto-advance functionality
         const startAutoplay = () => {
